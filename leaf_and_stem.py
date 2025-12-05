@@ -66,7 +66,6 @@ for i in range(range_list - 1):
 
 while True:
     if count ==  (len(stem) - 1):
-        print(count , count1)
         if stem[count] == stem_all[count1]:
             leaf_loop.append(leaf_all[count1])
             leaf.append(leaf_loop)
