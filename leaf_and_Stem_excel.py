@@ -10,14 +10,13 @@ def stem_leaf_dataframe(data_list):
     for v in sort_data:
         s = str(v)
 
-        # Decimal case (e.g., 34.2)
-        if "." in s:
+        if "." in s:  
             whole, decimal = s.split(".")
-            stem_all.append(whole)
-            leaf_all.append(decimal)
+            stem_all.append(int(whole))
+            leaf_all.append(int(decimal))
         else:
-            stem_all.append(s[:-1])   # stem = all but last digit
-            leaf_all.append(s[-1])    # leaf = last digit
+            stem_all.append(int(s) // 10)
+            leaf_all.append(int(s) % 10)
 
     # Build dictionary stem → leaves
     stems = sorted(list(set(stem_all)))
@@ -26,7 +25,7 @@ def stem_leaf_dataframe(data_list):
     for st, lf in zip(stem_all, leaf_all):
         stem_leaf_dict[st].append(lf)
 
-    # Build DataFrame rows
+    # Build rows
     max_leaf_count = max(len(v) for v in stem_leaf_dict.values())
     rows = []
 
@@ -35,19 +34,14 @@ def stem_leaf_dataframe(data_list):
         row = [st] + leaves + [""] * (max_leaf_count - len(leaves))
         rows.append(row)
 
-    # Create DataFrame
     col_names = ["stem"] + [f"leaf{i+1}" for i in range(max_leaf_count)]
     df_stem = pd.DataFrame(rows, columns=col_names)
 
-    # Add sorted raw data
     df_data = pd.DataFrame({"data": sort_data})
 
     return pd.concat([df_data, df_stem], axis=1)
 
 
-# ------------------------------------------------------
-# NEW FUNCTION — only one input list
-# ------------------------------------------------------
 def create_excel(data_list, file_name="stem_leaf_form_python.xlsx"):
     df = stem_leaf_dataframe(data_list)
 
@@ -67,6 +61,5 @@ if __name__ == "__main__":
         2130, 706, 1315, 1578, 1468, 1421, 2215, 1269, 758, 1512,
         1109, 785, 1260, 1416, 1750, 1481, 885, 1888, 1560, 1642
     ]
-
 
     create_excel(data_list1)
